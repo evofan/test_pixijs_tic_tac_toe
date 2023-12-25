@@ -3,19 +3,21 @@ console.log("test_pixijs_tic_tac_toe!");
 import * as PIXI from "pixi.js";
 import { Assets, Sprite } from 'pixi.js';
 
-import { randomInt } from "./helper/randomInt";
-
 import { STAGES } from "./constants";
 import { displayDateText } from "./helper/text";
+import { randomInt } from "./helper/randomInt";
 
 // PIXI.useDeprecated();
 
+/* ステージの横幅・縦幅・背景色を定数群から取得 */
 const WIDTH = STAGES.WIDTH;
 const HEIGHT = STAGES.HEIGHT;
 const BG_COLOR = STAGES.BG_COLOR;
 
+/* 後々デバイスピクセル比でサイズを変える為に比率を取得 */
 console.log("window.devicePixelRatio: ", window.devicePixelRatio); // window.devicePixelRatio:  2
 
+/* 初期化 */
 
 // init
 let app = new PIXI.Application({
@@ -116,4 +118,142 @@ app.ticker.add(() => {
 });
 
 
+/* 三目並べ用の変数 */
+/* 最初は前に作ったのを参考用にそのまま使用？ */
+
+/*
+//■■■初期設定■■■//-----------------------------------------------------------------------------------------
+var boxNo: Array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0);//初期値:0,//自分1、コンピュータ-1//0～8;/マスが埋まっているか空いているか？（埋1,空0）
+//var boxNo:Array = new Array(1,1,1,1,1,1,1,1,1);//テスト用
+//var boxNo:Array = new Array(-1,-1,-1,-1,-1,-1,-1,-1,-1);//テスト用
+//var boxNo:Array = new Array(-1,0,0,-1,0,0,0,0,0);//テスト用
+//var boxNo:Array = new Array(1,-1,1,-1,-1,1,1,1,-1);//テスト用//引き分け
+//trace("boxNo0:"+boxNo[0]);//boxNo0:1
+//trace("boxNo1:"+boxNo[1]);//boxNo1:1
+//trace("boxNo2:"+boxNo[2]);//boxNo2:1
+//trace("boxNo3:"+boxNo[3]);//boxNo3:0
+//trace("boxNo4:"+boxNo[4]);//boxNo4:0
+//trace("boxNo5:"+boxNo[5]);//boxNo5:0
+//trace("boxNo6:"+boxNo[6]);//boxNo6:0
+//trace("boxNo7:"+boxNo[7]);//boxNo7:0
+//trace("boxNo8:"+boxNo[8]);//boxNo8:0
+
+//player石（0～8）配置座標
+//var pl_gotoX:Array = new Array(100,200,300,100,200,300,100,200,300);
+//var pl_gotoY:Array = new Array(60,60,60,160,160,160,260,260,260);
+var pl_gotoX: Array = new Array(15, 120, 220, 15, 120, 220, 15, 120, 220);
+var pl_gotoY: Array = new Array(80, 80, 80, 180, 180, 180, 290, 290, 290);
+//cpu石（0～8）配置座標
+//var cp_gotoX:Array = new Array(100,200,300,100,200,300,100,200,300);
+//var cp_gotoY:Array = new Array(60,60,60,160,160,160,260,260,260);
+var cp_gotoX: Array = new Array(15, 120, 220, 15, 120, 220, 15, 120, 220);
+var cp_gotoY: Array = new Array(80, 80, 80, 180, 180, 180, 290, 290, 290);
+
+//個別function内のvar変数だとローカルでアクセス出来ないので
+var line1Total: Number;
+var line2Total: Number;
+var line3Total: Number;
+var line4Total: Number;
+var line5Total: Number;
+var line6Total: Number;
+var line7Total: Number;
+var line8Total: Number;
+
+//ラインが揃ったかどうかの判別用（9ライン分）
+var line1Reach: Array = new Array(0, 1, 2);//上―
+var line2Reach: Array = new Array(3, 4, 5);//中―
+var line3Reach: Array = new Array(6, 7, 8);//下―
+var line4Reach: Array = new Array(0, 3, 6);//左｜
+var line5Reach: Array = new Array(1, 4, 7);//中｜
+var line6Reach: Array = new Array(2, 5, 8);//右｜
+var line7Reach: Array = new Array(0, 4, 8);//＼
+var line8Reach: Array = new Array(6, 4, 2);//／
+
+//ラインが9個揃ったか判別用（合計3～-3）
+var line1: Array = new Array(boxNo[0], boxNo[1], boxNo[2]);//line1(0,1,2)上―
+var line2: Array = new Array(boxNo[3], boxNo[4], boxNo[5]);//line2(3,4,5)中―
+var line3: Array = new Array(boxNo[6], boxNo[7], boxNo[8]);//line3(6,7,8)下―
+var line4: Array = new Array(boxNo[0], boxNo[3], boxNo[6]);//line4(0,3,6)//左｜
+var line5: Array = new Array(boxNo[1], boxNo[4], boxNo[7]);//line5(1,4,7)//中｜
+var line6: Array = new Array(boxNo[2], boxNo[5], boxNo[8]);//line6(2,5,8)//右｜
+var line7: Array = new Array(boxNo[0], boxNo[4], boxNo[8]);//line7(0,4,8)//＼
+var line8: Array = new Array(boxNo[6], boxNo[4], boxNo[2]);//line8(6,4,2)//／
+
+//□□メイン用各命令処理フラグ
+var statusNo: Number = 0;
+
+//■■石を画面からどかす（スタート時に端に）//石をどかす時の参照mc用
+var target_mc: MovieClip;
+var target_mc02: MovieClip;
+
+//■■先攻後攻決める（この場合RNDで）//先攻後攻決定用
+var beforeAfter: Number;
+var yourMove: Boolean;
+
+//■■ラインが揃ったかの判別（各ラインTotalで、+3＝Player勝ち、-3＝CPU勝ち）//勝ち負け判別用
+var clearLineFlag: Number = 0;//0:揃ってない、1:人間勝ち、-1:CPU勝ち
+
+//■■石を9個置き終わったか判別
+var placeStoneAll: Boolean;
+
+
+*/
+
+
+/* 処理の流れはフラグ（State）で管理？前のそのまま使用？ */
+
+
+/*
+
+//■■■メインルーチン■■■//-----------------------------------------------------------------------------------------
+
+this.addEventListener(Event.ENTER_FRAME,startMain);
+//□□メイン
+function startMain(e:Event){
+	//trace("statusNo:"+statusNo);//現在のステータス番号表示
+	if (statusNo == 0){
+		//■■石を盤上からどかす（スタート時に端に）
+		statusNo = -1;
+		removeStone();
+		statusNo = 1;
+	}
+	if (statusNo == 1){
+		//■■先攻後攻決める（この場合RNDで）
+		statusNo = -1;
+		beforeOrAfter();//trace("yourMove:"+yourMove);//true:人間が先攻、false：CPUが先攻
+		statusNo = 2;
+	}
+	if (statusNo == 2){
+		statusNo = -1;
+		//■■ラインが揃ったかの判別（各ラインTotalで、+3＝Player勝ち、-3＝CPU勝ち）
+		clearLineCheck();
+		if(clearLineFlag==1){gotoAndPlay(3)}//player勝利
+		else if (clearLineFlag==-1){gotoAndPlay(4)}//cpu勝利
+		else {statusNo=3}
+	}
+	if (statusNo == 3){
+		statusNo = -1;
+		//■■石を9個置き終わったか判別
+		//trace("placeStoneAll:"+placeStoneAll);//false
+		placeStoneAllCheck();
+		//trace("placeStoneAll:"+placeStoneAll);//false or true
+		if (placeStoneAll==true && clearLineFlag==0){gotoAndPlay(2)}//trueで終了（引き分け）処理
+		else {	statusNo = 4;}
+	}
+	if (statusNo == 4 && yourMove == true){
+		statusNo = -1;
+		//■■プレイヤーの手番
+		playerTurn();
+	} else if  (statusNo == 4 && yourMove == false){
+		//■■CPU手番
+		statusNo = -1;
+		cpuTurn();
+	}
+	if (statusNo == 5){
+		//■■
+		statusNo = -1;
+		//上記以外の処理
+	}
+}
+*/
 
