@@ -69,11 +69,17 @@ text2.x = WIDTH / 2 + text1.width - 50;
 text2.y = HEIGHT / 2 - 10;
 
 let image1;
+let image2;
+let image3;
+let image4;
+let image5;
 let loadingEnd = false;
 
 // Load image and Set sprite
 const LoadImg = async () => {
 	console.log("LoadImg()");
+
+	// 猫
 	const texture1 = await Assets.load('assets/images/pic_cat2.png');
 	image1 = Sprite.from(texture1);
 	console.log(texture1); // Texture {_events: Events, _eventsCount: 0, noFrame: true, baseTexture: _BaseTexture, _frame: Rectangle, …}
@@ -85,6 +91,52 @@ const LoadImg = async () => {
 	// image1.height = image1.height / 2;
 	image1.scale.set(0.5, 0.5);
 	container.addChild(image1);
+
+	// 背景の木
+	const texture2 = await Assets.load('assets/images/pic_wood.png');
+	image2 = Sprite.from(texture2);
+	console.log(texture2); // Texture {_events: Events, _eventsCount: 0, noFrame: true, baseTexture: _BaseTexture, _frame: Rectangle, …}
+	console.log(image2); // Sprite {_events: Events, _eventsCount: 0, tempDisplayObjectParent: null, transform: _Transform, alpha: 1, …}
+	// image2.anchor.set(0.5);
+	image2.x = 1;
+	image2.y = 1;
+	// image1.scale.set(0.5, 0.5);
+	container.addChild(image2);
+
+	// 升目
+	const texture3 = await Assets.load('assets/images/pic_board.png');
+	image3 = Sprite.from(texture3);
+	console.log(texture3); // Texture {_events: Events, _eventsCount: 0, noFrame: true, baseTexture: _BaseTexture, _frame: Rectangle, …}
+	console.log(image3); // Sprite {_events: Events, _eventsCount: 0, tempDisplayObjectParent: null, transform: _Transform, alpha: 1, …}
+	// image3.anchor.set(0.5);
+	image3.x = 1;
+	image3.y = 80;
+	// image1.scale.set(0.5, 0.5);
+	container.addChild(image3);
+
+	// 白の石
+	const texture4 = await Assets.load('assets/images/pic_white_piece.png');
+	image4 = Sprite.from(texture4);
+	console.log(texture4); // Texture {_events: Events, _eventsCount: 0, noFrame: true, baseTexture: _BaseTexture, _frame: Rectangle, …}
+	console.log(image4); // Sprite {_events: Events, _eventsCount: 0, tempDisplayObjectParent: null, transform: _Transform, alpha: 1, …}
+	image4.anchor.set(0.5);
+	image4.x = 65;
+	image4.y = 135;
+	// image1.scale.set(0.5, 0.5);
+	container.addChild(image4);
+
+	// 黒の石
+	const texture5 = await Assets.load('assets/images/pic_black_piece.png');
+	image5 = Sprite.from(texture5);
+	console.log(texture5); // Texture {_events: Events, _eventsCount: 0, noFrame: true, baseTexture: _BaseTexture, _frame: Rectangle, …}
+	console.log(image5); // 5Sprite {_events: Events, _eventsCount: 0, tempDisplayObjectParent: null, transform: _Transform, alpha: 1, …}
+	image5.anchor.set(0.5);
+	image5.x = 165;
+	image5.y = 235;
+	// image1.scale.set(0.5, 0.5);
+	container.addChild(image5);
+
+
 	next();
 }
 
@@ -103,8 +155,8 @@ const next = () => {
 
 }
 
-// view todays date
-let today = displayDateText(app);
+// 日付表示
+// let today = displayDateText(app);
 
 // Ticler
 app.ticker.add(() => {
@@ -225,7 +277,7 @@ const init = () => {
 
 // }
 
-const startMain = (e) => {
+const startMain = () => {
 
 	if (initEnd) {
 		console.log("ステート監視開始");
@@ -238,539 +290,539 @@ const startMain = (e) => {
 	if (statusNum === 0) {
 		// ■■ 石を盤上からどかす（スタート時に端に）
 		statusNum = -1;
-		removeStone();
+		// removeStone();
 		statusNum = 1;
 	}
 
 	if (statusNum === 1) {
 		// ■■ 先攻後攻決める（この場合RNDで）
 		statusNum = -1;
-		beforeOrAfter(); // console.log("yourMove:"+yourMove); // true:人間が先攻、false：CPUが先攻
+		// beforeOrAfter(); // console.log("yourMove:"+yourMove); // true:人間が先攻、false：CPUが先攻
 		statusNum = 2;
 	}
 
 	if (statusNum === 2) {
 		statusNum = -1;
 		// ■■ラインが揃ったかの判別（各ラインTotalで、+3＝Player勝ち、-3＝CPU勝ち）
-		clearLineCheck();
-		if (clearLineFlag == 1) { gotoAndPlay(3) }//player勝利
-		else if (clearLineFlag == -1) { gotoAndPlay(4) }//cpu勝利
-		else { statusNum = 3 }
+		// clearLineCheck();
+		// if (clearLineFlag == 1) { gotoAndPlay(3) }//player勝利
+		// else if (clearLineFlag == -1) { gotoAndPlay(4) }//cpu勝利
+		// else { statusNum = 3 }
 	}
 
 	if (statusNum === 3) {
 		statusNum = -1;
 		// ■■ 石を9個置き終わったか判別
 		// console.log("placeStoneAll:"+placeStoneAll); // false
-		placeStoneAllCheck();
+		// placeStoneAllCheck();
 		// console.log("placeStoneAll:"+placeStoneAll); // false or true
-		if (placeStoneAll == true && clearLineFlag == 0) { gotoAndPlay(2) } // trueで終了（引き分け）処理
-		else { statusNum = 4; }
+		// if (placeStoneAll == true && clearLineFlag == 0) { gotoAndPlay(2) } // trueで終了（引き分け）処理
+		// else { statusNum = 4; }
 	}
 
 	if (statusNum === 4 && yourMove === true) {
 		statusNum = -1;
 		// ■■ プレイヤーの手番
-		playerTurn();
+		// playerTurn();
 	} else if (statusNum === 4 && yourMove === false) {
 		// ■■ CPU手番
 		statusNum = -1;
-		cpuTurn();
+		// cpuTurn();
 	}
 
 	if (statusNum === 5) {
-		// ■■
+		// ■■上記以外の処理
 		statusNum = -1;
-		//上記以外の処理
+		console.log("★！★通常ここには来ない！");
 	}
 
 }
 
 
 // ■■■ サブルーチン ■■■ //-----------------------------------------------------------------------------------------
-// ※外部.jsに分割する？
+// ※外部.jsに分割する？ →　※最終的に
 
 // ■■ 石を画面からどかす（スタート時に端に）
 // function removeStone() {
-const removeStone = () => {
-	for (let i = 0; i <= 8; i++) {
-		target_mc = MovieClip(getChildByName("pl" + i)); // playerの石、※MC名で参照 → Sprite名？で参照に
-		// console.log("target_mc.name:" + target_mc.name); // target_mc.name:pl0～target_mc.name:pl8
-		target_mc.x = -50;
-		target_mc.y = -50; // ↓ここは配置時にも使うので外でも可？
-		target_mc02 = MovieClip(getChildByName("cp" + i)); // cpu石
-		// console.log(target_mc02.name);
-		target_mc02.x = -50;
-		target_mc02.y = -0;
-	}
-}
+// const removeStone = () => {
+// 	for (let i = 0; i <= 8; i++) {
+// 		target_mc = MovieClip(getChildByName("pl" + i)); // playerの石、※MC名で参照 → Sprite名？で参照に
+// 		// console.log("target_mc.name:" + target_mc.name); // target_mc.name:pl0～target_mc.name:pl8
+// 		target_mc.x = -50;
+// 		target_mc.y = -50; // ↓ここは配置時にも使うので外でも可？
+// 		target_mc02 = MovieClip(getChildByName("cp" + i)); // cpu石
+// 		// console.log(target_mc02.name);
+// 		target_mc02.x = -50;
+// 		target_mc02.y = -0;
+// 	}
+// }
 
 // ■■ 先攻後攻決める（RNDで）※returnを値で返して代入にする？
 // function beforeOrAfter() {
-const beforeOrAfter = () => {
-	beforeAfter = Math.floor(Math.random() * 2 + 1);
-	if (beforeAfter == 1) {
-		yourMove = true; // 人間先攻
-	} else {
-		yourMove = false; // CPU先攻
-	}
-}
+// const beforeOrAfter = () => {
+// 	beforeAfter = Math.floor(Math.random() * 2 + 1);
+// 	if (beforeAfter == 1) {
+// 		yourMove = true; // 人間先攻
+// 	} else {
+// 		yourMove = false; // CPU先攻
+// 	}
+// }
 
 // ■■ ラインが揃ったかの判別（各ラインTotalの値で、+3＝Player勝ち、-3＝CPU勝ち）
 // function clearLineCheck(): void {
-const clearLineCheck = () => {
-	console.log("▲▲▲clearLineCheck▲▲▲"); // ▲▲▲clearLineCheck▲▲▲
-	console.log("▲this:" + this); // ▲this:[object MainTimeline] -> 
-	console.log("▲：" + line1[0]);
-	console.log("▲▲：" + MainTimeline); // ▲▲：[class MainTimeline] -> 
-	// ラインが9個揃ったか判別用（合計3～-3）
-	line1 = [boxNo[0], boxNo[1], boxNo[2]]; // line1(0,1,2)上―
-	line2 = [boxNo[3], boxNo[4], boxNo[5]]; // line2(3,4,5)中―
-	line3 = [boxNo[6], boxNo[7], boxNo[8]]; // line3(6,7,8)下―
-	line4 = [boxNo[0], boxNo[3], boxNo[6]]; // line4(0,3,6) //左｜
-	line5 = [boxNo[1], boxNo[4], boxNo[7]]; // line5(1,4,7) //中｜
-	line6 = [boxNo[2], boxNo[5], boxNo[8]]; // line6(2,5,8) //右｜
-	line7 = [boxNo[0], boxNo[4], boxNo[8]]; // line7(0,4,8) //＼
-	line8 = [boxNo[6], boxNo[4], boxNo[2]]; // line8(6,4,2) //／
-	//↑★mustここでもう1回代入しないと反映されない（AS時）
+// const clearLineCheck = () => {
+// 	console.log("▲▲▲clearLineCheck▲▲▲"); // ▲▲▲clearLineCheck▲▲▲
+// 	console.log("▲this:" + this); // ▲this:[object MainTimeline] -> 
+// 	console.log("▲：" + line1[0]);
+// 	console.log("▲▲：" + MainTimeline); // ▲▲：[class MainTimeline] -> 
+// 	// ラインが9個揃ったか判別用（合計3～-3）
+// 	line1 = [boxNo[0], boxNo[1], boxNo[2]]; // line1(0,1,2)上―
+// 	line2 = [boxNo[3], boxNo[4], boxNo[5]]; // line2(3,4,5)中―
+// 	line3 = [boxNo[6], boxNo[7], boxNo[8]]; // line3(6,7,8)下―
+// 	line4 = [boxNo[0], boxNo[3], boxNo[6]]; // line4(0,3,6) //左｜
+// 	line5 = [boxNo[1], boxNo[4], boxNo[7]]; // line5(1,4,7) //中｜
+// 	line6 = [boxNo[2], boxNo[5], boxNo[8]]; // line6(2,5,8) //右｜
+// 	line7 = [boxNo[0], boxNo[4], boxNo[8]]; // line7(0,4,8) //＼
+// 	line8 = [boxNo[6], boxNo[4], boxNo[2]]; // line8(6,4,2) //／
+// 	//↑★mustここでもう1回代入しないと反映されない（AS時）
 
-	//（1）各ラインの合計算出、※関数にしてfor文で？
+// 	//（1）各ラインの合計算出、※関数にしてfor文で？
 
-	// line1(0,1,2) 上―
-	line1Total = line1[0] + line1[1] + line1[2];
-	console.log("1ライン目：" + line1[0], line1[1], line1[2] + "→合計：" + line1Total); // 1ライン目：1 1 1 → 合計：3
-	//trace(typeof line1Total);//number、//trace(typeof Array);//object
+// 	// line1(0,1,2) 上―
+// 	line1Total = line1[0] + line1[1] + line1[2];
+// 	console.log("1ライン目：" + line1[0], line1[1], line1[2] + "→合計：" + line1Total); // 1ライン目：1 1 1 → 合計：3
+// 	//trace(typeof line1Total);//number、//trace(typeof Array);//object
 
-	// line2(3,4,5) 中―
-	line2Total = line2[0] + line2[1] + line2[2];
-	console.log("2ライン目：" + line2[0], line2[1], line2[2] + "→合計：" + line2Total); // 2ライン目：0 0 0 → 合計：0
+// 	// line2(3,4,5) 中―
+// 	line2Total = line2[0] + line2[1] + line2[2];
+// 	console.log("2ライン目：" + line2[0], line2[1], line2[2] + "→合計：" + line2Total); // 2ライン目：0 0 0 → 合計：0
 
-	// line3(6,7,8) 下―
-	line3Total = line3[0] + line3[1] + line3[2];
-	console.log("3ライン目：" + line3[0], line3[1], line3[2] + "→合計：" + line3Total); // 3ライン目：0 0 0 → 合計：0
+// 	// line3(6,7,8) 下―
+// 	line3Total = line3[0] + line3[1] + line3[2];
+// 	console.log("3ライン目：" + line3[0], line3[1], line3[2] + "→合計：" + line3Total); // 3ライン目：0 0 0 → 合計：0
 
-	// line4(0,3,6) // 左｜
-	line4Total = line4[0] + line4[1] + line4[2];
-	console.log("4ライン目：" + line4[0], line4[1], line4[2] + "→合計：" + line4Total); // 4ライン目：0 0 0 → 合計：0
+// 	// line4(0,3,6) // 左｜
+// 	line4Total = line4[0] + line4[1] + line4[2];
+// 	console.log("4ライン目：" + line4[0], line4[1], line4[2] + "→合計：" + line4Total); // 4ライン目：0 0 0 → 合計：0
 
-	// line5(1,4,7) // 中｜
-	line5Total = line5[0] + line5[1] + line5[2];
-	console.log("5ライン目：" + line5[0], line5[1], line5[2] + "→合計：" + line5Total); // 5ライン目：0 0 0 → 合計：0
+// 	// line5(1,4,7) // 中｜
+// 	line5Total = line5[0] + line5[1] + line5[2];
+// 	console.log("5ライン目：" + line5[0], line5[1], line5[2] + "→合計：" + line5Total); // 5ライン目：0 0 0 → 合計：0
 
-	// line6(2,5,8) // 右｜
-	line6Total = line6[0] + line6[1] + line6[2];
-	console.log("6ライン目：" + line6[0], line6[1], line6[2] + "→合計：" + line6Total); // 6ライン目：0 0 0 → 合計：0
+// 	// line6(2,5,8) // 右｜
+// 	line6Total = line6[0] + line6[1] + line6[2];
+// 	console.log("6ライン目：" + line6[0], line6[1], line6[2] + "→合計：" + line6Total); // 6ライン目：0 0 0 → 合計：0
 
-	// line7(0,4,8) // ＼
-	line7Total = line7[0] + line7[1] + line7[2];
-	console.log("7ライン目：" + line7[0], line7[1], line7[2] + "→合計：" + line7Total); // 7ライン目：0 0 0 → 合計：0
+// 	// line7(0,4,8) // ＼
+// 	line7Total = line7[0] + line7[1] + line7[2];
+// 	console.log("7ライン目：" + line7[0], line7[1], line7[2] + "→合計：" + line7Total); // 7ライン目：0 0 0 → 合計：0
 
-	// line8(6,4,2) // ／
-	line8Total = line8[0] + line8[1] + line8[2];
-	console.log("8ライン目：" + line8[0], line8[1], line8[2] + "→合計：" + line8Total); // 8ライン目：0 0 0 → 合計：0
+// 	// line8(6,4,2) // ／
+// 	line8Total = line8[0] + line8[1] + line8[2];
+// 	console.log("8ライン目：" + line8[0], line8[1], line8[2] + "→合計：" + line8Total); // 8ライン目：0 0 0 → 合計：0
 
-	//（2）各ラインの判別
-	for (let j = 1; j <= 8; j++) { // trace("j:"+j);
-		if (this["line" + j + "Total"] == 3) { // trace("this:"+this);//this:[object MainTimeline]
-			clearLineFlag = 1;
-			console.log("●人間の勝ち");
-			break;
-		} else if (this["line" + j + "Total"] == -3) {
-			clearLineFlag = -1;
-			console.log("●CPUの勝ち");
-			break;
-		} else {
-			console.log(j, "ラインが揃ってないので次のラインへ");
-			if (j != 8) {
-				continue; // 全部判別し終わってない場合は抜けないでループ
-			}
-			console.log("判別終了、●今回揃ってるラインは無し");
-			clearLineFlag = 0;
-		}
-	}
-}
+// 	//（2）各ラインの判別
+// 	for (let j = 1; j <= 8; j++) { // trace("j:"+j);
+// 		if (this["line" + j + "Total"] == 3) { // trace("this:"+this);//this:[object MainTimeline]
+// 			clearLineFlag = 1;
+// 			console.log("●人間の勝ち");
+// 			break;
+// 		} else if (this["line" + j + "Total"] == -3) {
+// 			clearLineFlag = -1;
+// 			console.log("●CPUの勝ち");
+// 			break;
+// 		} else {
+// 			console.log(j, "ラインが揃ってないので次のラインへ");
+// 			if (j != 8) {
+// 				continue; // 全部判別し終わってない場合は抜けないでループ
+// 			}
+// 			console.log("判別終了、●今回揃ってるラインは無し");
+// 			clearLineFlag = 0;
+// 		}
+// 	}
+// }
 
 // ■■ 石を9個置き終わったか判別
 // function placeStoneAllCheck(): void/*:Boolean*/ {
-const placeStoneAllCheck = () => {
-	console.log("▲▲▲placeStoneAllCheck▲▲▲");
-	//trace("boxNo.length:"+boxNo.length);//boxNo.length:9
-	for (var i = 0; i <= boxNo.length - 1; i++) {
-		if (boxNo[i] == 0) {
-			console.log("埋まって無い所があるので★ゲーム継続★ " + "（埋まってないマス目" + i + "＝" + boxNo[i] + "）");
-			// 埋まって無い所があるので★ゲーム継続★ （埋まってないマス目0＝0）
-			placeStoneAll = false;
-			break;
-		}
-		console.log(i, "マス目＝" + boxNo[i]);//0 マス目＝1
-		if (i == 8) {
-			console.log("●全部埋まりました、引き分けです ⇒ 終了");
-			placeStoneAll = true;
-			break;
-		}
-	}
-	/* return placeStoneAll; */
-}
+// const placeStoneAllCheck = () => {
+// 	console.log("▲▲▲placeStoneAllCheck▲▲▲");
+// 	//trace("boxNo.length:"+boxNo.length);//boxNo.length:9
+// 	for (var i = 0; i <= boxNo.length - 1; i++) {
+// 		if (boxNo[i] == 0) {
+// 			console.log("埋まって無い所があるので★ゲーム継続★ " + "（埋まってないマス目" + i + "＝" + boxNo[i] + "）");
+// 			// 埋まって無い所があるので★ゲーム継続★ （埋まってないマス目0＝0）
+// 			placeStoneAll = false;
+// 			break;
+// 		}
+// 		console.log(i, "マス目＝" + boxNo[i]);//0 マス目＝1
+// 		if (i == 8) {
+// 			console.log("●全部埋まりました、引き分けです ⇒ 終了");
+// 			placeStoneAll = true;
+// 			break;
+// 		}
+// 	}
+// 	// return placeStoneAll;
+// }
 
 // ■■ プレイヤーの手番
 // function playerTurn() {
-const playerTurn = () => {
-	console.log("▲▲▲playerTurn▲▲▲");
-	var inputNum = -1;
+// const playerTurn = () => {
+// 	console.log("▲▲▲playerTurn▲▲▲");
+// 	var inputNum = -1;
 	
-	// 入力受け付け
-	stage.addEventListener(Event.ENTER_FRAME, searchMousePosition); // 毎フレームチェック
-	// 登録は最初の方で一回でOK
+// 	// 入力受け付け
+// 	stage.addEventListener(Event.ENTER_FRAME, searchMousePosition); // 毎フレームチェック
+// 	// 登録は最初の方で一回でOK
 
-	// function searchMousePosition(eventobject: Event): void {
-	let searchMousePosition = (eventobject) => {
-		//trace(event.target);//[object Stage]
-		if (mc0.hitTestPoint(stage.mouseX, stage.mouseY, true)) {//trueは実形状、falseは矩形（四角）
-			hyouji.text = "0枠クリック";
-			inputNum = 0;
-			//開放
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			//hyouji.text = "0枠クリックで終了";
-		} else if (mc1.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "1枠クリック";
-			inputNum = 1;
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			//hyouji.text = "1枠クリックで終了";
-		} else if (mc2.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "2枠クリック";
-			inputNum = 2;
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			hyouji.text = "2枠クリックで終了";
-		} else if (mc3.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "3枠クリック";
-			inputNum = 3;
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			hyouji.text = "3枠クリックで終了";
-		} else if (mc4.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "4枠クリック";
-			inputNum = 4;
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			hyouji.text = "4枠クリックで終了";
-		} else if (mc5.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "5枠クリック";
-			inputNum = 5;
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			hyouji.text = "5枠クリックで終了";
-		} else if (mc6.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "6枠クリック";
-			inputNum = 6;
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			hyouji.text = "6枠クリックで終了";
-		} else if (mc7.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "7枠クリック";
-			inputNum = 7;
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			hyouji.text = "7枠クリックで終了";
-		} else if (mc8.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
-			hyouji.text = "8枠クリック";
-			inputNum = 8;
-			//開放
-			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
-			hyouji.text = "8枠クリックで終了";
-		} else {
-			inputNum = -1;
-			hyouji.text = "枠外をクリック";
-		}
-	}
+// 	// function searchMousePosition(eventobject: Event): void {
+// 	let searchMousePosition = (eventobject) => {
+// 		//trace(event.target);//[object Stage]
+// 		if (mc0.hitTestPoint(stage.mouseX, stage.mouseY, true)) {//trueは実形状、falseは矩形（四角）
+// 			hyouji.text = "0枠クリック";
+// 			inputNum = 0;
+// 			//開放
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			//hyouji.text = "0枠クリックで終了";
+// 		} else if (mc1.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "1枠クリック";
+// 			inputNum = 1;
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			//hyouji.text = "1枠クリックで終了";
+// 		} else if (mc2.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "2枠クリック";
+// 			inputNum = 2;
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			hyouji.text = "2枠クリックで終了";
+// 		} else if (mc3.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "3枠クリック";
+// 			inputNum = 3;
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			hyouji.text = "3枠クリックで終了";
+// 		} else if (mc4.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "4枠クリック";
+// 			inputNum = 4;
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			hyouji.text = "4枠クリックで終了";
+// 		} else if (mc5.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "5枠クリック";
+// 			inputNum = 5;
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			hyouji.text = "5枠クリックで終了";
+// 		} else if (mc6.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "6枠クリック";
+// 			inputNum = 6;
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			hyouji.text = "6枠クリックで終了";
+// 		} else if (mc7.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "7枠クリック";
+// 			inputNum = 7;
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			hyouji.text = "7枠クリックで終了";
+// 		} else if (mc8.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+// 			hyouji.text = "8枠クリック";
+// 			inputNum = 8;
+// 			//開放
+// 			//stage.removeEventListener(Event.ENTER_FRAME,searchMousePosition);
+// 			hyouji.text = "8枠クリックで終了";
+// 		} else {
+// 			inputNum = -1;
+// 			hyouji.text = "枠外をクリック";
+// 		}
+// 	}
 
-	//さらに押した判定も+
-	stage.addEventListener(MouseEvent.MOUSE_UP, MouseLUpFunc);
+// 	//さらに押した判定も+
+// 	stage.addEventListener(MouseEvent.MOUSE_UP, MouseLUpFunc);
 
-	// function MouseLUpFunc(eventobject: MouseEvent) {
-	let MouseLUpFunc = (eventobject) => {
-		console.log("マウスが離された");
-		console.log("inputNum:" + inputNum)
-		//
-		if (boxNo[inputNum] === 0) {
-			boxNo[inputNum] = 1;//人間が置いたら1
-			//★重要★mcのインスタンス名から参照を取得して操作
-			var target_mc = MovieClip(getChildByName("pl" + inputNum));
-			console.log(target_mc.name);
-			target_mc.x = pl_gotoX[inputNum];
-			target_mc.y = pl_gotoY[inputNum];
-			console.log(inputNum + "に石を置きました");
-			stage.removeEventListener(MouseEvent.MOUSE_UP, MouseLUpFunc);//1個置けたらマウスdisablle
-			stage.removeEventListener(Event.ENTER_FRAME, searchMousePosition);//1個置けたらヒットチェックdisablle
-			console.log("boxNo0:" + boxNo[0]);//
-			console.log("boxNo1:" + boxNo[1]);//
-			console.log("boxNo2:" + boxNo[2]);//石を置いて1にはなってる
-			console.log("boxNo3:" + boxNo[3]);//
-			console.log("boxNo4:" + boxNo[4]);//
-			console.log("boxNo5:" + boxNo[5]);//
-			console.log("boxNo6:" + boxNo[6]);//
-			console.log("boxNo7:" + boxNo[7]);//
-			console.log("boxNo8:" + boxNo[8]);//
-			//■CPUの手番へ
-			//statusNum=4;
-			yourMove = false;
-			//★勝敗・終了判別へ
-			statusNum = 2;
-		} else {
-			console.log("そこは石を置けません");
-		}
-	}
-}
+// 	// function MouseLUpFunc(eventobject: MouseEvent) {
+// 	let MouseLUpFunc = (eventobject) => {
+// 		console.log("マウスが離された");
+// 		console.log("inputNum:" + inputNum)
+// 		//
+// 		if (boxNo[inputNum] === 0) {
+// 			boxNo[inputNum] = 1;//人間が置いたら1
+// 			//★重要★mcのインスタンス名から参照を取得して操作
+// 			var target_mc = MovieClip(getChildByName("pl" + inputNum));
+// 			console.log(target_mc.name);
+// 			target_mc.x = pl_gotoX[inputNum];
+// 			target_mc.y = pl_gotoY[inputNum];
+// 			console.log(inputNum + "に石を置きました");
+// 			stage.removeEventListener(MouseEvent.MOUSE_UP, MouseLUpFunc);//1個置けたらマウスdisablle
+// 			stage.removeEventListener(Event.ENTER_FRAME, searchMousePosition);//1個置けたらヒットチェックdisablle
+// 			console.log("boxNo0:" + boxNo[0]);//
+// 			console.log("boxNo1:" + boxNo[1]);//
+// 			console.log("boxNo2:" + boxNo[2]);//石を置いて1にはなってる
+// 			console.log("boxNo3:" + boxNo[3]);//
+// 			console.log("boxNo4:" + boxNo[4]);//
+// 			console.log("boxNo5:" + boxNo[5]);//
+// 			console.log("boxNo6:" + boxNo[6]);//
+// 			console.log("boxNo7:" + boxNo[7]);//
+// 			console.log("boxNo8:" + boxNo[8]);//
+// 			//■CPUの手番へ
+// 			//statusNum=4;
+// 			yourMove = false;
+// 			//★勝敗・終了判別へ
+// 			statusNum = 2;
+// 		} else {
+// 			console.log("そこは石を置けません");
+// 		}
+// 	}
+// }
 
 // ■CPUの手番
 // function cpuTurn() {
-const cpuTurn = () => {
-	console.log("▲▲▲cpuTurn▲▲▲");
-	var cpuput02;
-	var target_mc03;
-	var inputNum = -1;
-	var ooo = -1; // ?
-	console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo:①" + ooo);
-	//（1）各ラインの合計算出
-	//line1(0,1,2)上―
-	line1Total = line1[0] + line1[1] + line1[2]; trace("1ライン目：" + line1[0], line1[1], line1[2] + "→合計：" + line1Total);//1ライン目：1 1 1→合計：3
-	//trace(typeof line1Total);//number、//trace(typeof Array);//object
-	//line2(3,4,5)中―
-	line2Total = line2[0] + line2[1] + line2[2]; trace("2ライン目：" + line2[0], line2[1], line2[2] + "→合計：" + line2Total);//2ライン目：0 0 0→合計：0
-	//line3(6,7,8)下―
-	line3Total = line3[0] + line3[1] + line3[2]; trace("3ライン目：" + line3[0], line3[1], line3[2] + "→合計：" + line3Total);//3ライン目：0 0 0→合計：0
-	//line4(0,3,6)//左｜
-	line4Total = line4[0] + line4[1] + line4[2]; trace("4ライン目：" + line4[0], line4[1], line4[2] + "→合計：" + line4Total);//4ライン目：0 0 0→合計：0
-	//line5(1,4,7)//中｜
-	line5Total = line5[0] + line5[1] + line5[2]; trace("5ライン目：" + line5[0], line5[1], line5[2] + "→合計：" + line5Total);//5ライン目：0 0 0→合計：0
-	//line6(2,5,8)//右｜
-	line6Total = line6[0] + line6[1] + line6[2]; trace("6ライン目：" + line6[0], line6[1], line6[2] + "→合計：" + line6Total);//6ライン目：0 0 0→合計：0
-	//line7(0,4,8)//＼
-	line7Total = line7[0] + line7[1] + line7[2]; trace("7ライン目：" + line7[0], line7[1], line7[2] + "→合計：" + line7Total);//7ライン目：0 0 0→合計：0
-	//line8(6,4,2)//／
-	line8Total = line8[0] + line8[1] + line8[2]; trace("8ライン目：" + line8[0], line8[1], line8[2] + "→合計：" + line8Total);//8ライン目：0 0 0→合計：0
+// const cpuTurn = () => {
+// 	console.log("▲▲▲cpuTurn▲▲▲");
+// 	var cpuput02;
+// 	var target_mc03;
+// 	var inputNum = -1;
+// 	var ooo = -1; // ?
+// 	console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo:①" + ooo);
+// 	//（1）各ラインの合計算出
+// 	//line1(0,1,2)上―
+// 	line1Total = line1[0] + line1[1] + line1[2]; trace("1ライン目：" + line1[0], line1[1], line1[2] + "→合計：" + line1Total);//1ライン目：1 1 1→合計：3
+// 	//trace(typeof line1Total);//number、//trace(typeof Array);//object
+// 	//line2(3,4,5)中―
+// 	line2Total = line2[0] + line2[1] + line2[2]; trace("2ライン目：" + line2[0], line2[1], line2[2] + "→合計：" + line2Total);//2ライン目：0 0 0→合計：0
+// 	//line3(6,7,8)下―
+// 	line3Total = line3[0] + line3[1] + line3[2]; trace("3ライン目：" + line3[0], line3[1], line3[2] + "→合計：" + line3Total);//3ライン目：0 0 0→合計：0
+// 	//line4(0,3,6)//左｜
+// 	line4Total = line4[0] + line4[1] + line4[2]; trace("4ライン目：" + line4[0], line4[1], line4[2] + "→合計：" + line4Total);//4ライン目：0 0 0→合計：0
+// 	//line5(1,4,7)//中｜
+// 	line5Total = line5[0] + line5[1] + line5[2]; trace("5ライン目：" + line5[0], line5[1], line5[2] + "→合計：" + line5Total);//5ライン目：0 0 0→合計：0
+// 	//line6(2,5,8)//右｜
+// 	line6Total = line6[0] + line6[1] + line6[2]; trace("6ライン目：" + line6[0], line6[1], line6[2] + "→合計：" + line6Total);//6ライン目：0 0 0→合計：0
+// 	//line7(0,4,8)//＼
+// 	line7Total = line7[0] + line7[1] + line7[2]; trace("7ライン目：" + line7[0], line7[1], line7[2] + "→合計：" + line7Total);//7ライン目：0 0 0→合計：0
+// 	//line8(6,4,2)//／
+// 	line8Total = line8[0] + line8[1] + line8[2]; trace("8ライン目：" + line8[0], line8[1], line8[2] + "→合計：" + line8Total);//8ライン目：0 0 0→合計：0
 
-	// ■■ cpu判断（1）自分リーチ時
-	console.log("CPU判別中11111111111111111111111111111111111111111111111111111")
-	for (let jr = 1; j <= 8; j++) {
-		if (ooo === -1) {
-			if (this["line" + j + "Total"] === -2) {//cpuリーチ
-				ooo = -2;
-				console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooooo④:" + ooo);
-				console.log("ライン" + j + "がリーチ♪♪♪♪♪")
-				//★完★リーチしているラインから残りの空きを取得
-				var a;//インデックス番号は文字列で取得されるので後で数値に変換
-				var indexNo;
-				for (a in this["line" + j]) {
-					indexNo = uint(a);
-					var b = this["line" + j][indexNo];
-					console.log("__________for_in_____:" + a, b);
-					//よってcpuが置く場所は
-					if (b == 0) {
-						var setPosition = this["line" + j + "Reach"][a];
-						console.log("▲setPos:" + setPosition);
-					}
-				}
-				//★完★空きに石をセット
-				cpuput02 = setPosition;
-				// インスタンス名から参照を取得して操作
-				target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-				console.log(target_mc03.name);
-				target_mc03.x = cp_gotoX[cpuput02];
-				target_mc03.y = cp_gotoY[cpuput02];
-				console.log(cpuput02 + "に●●CPUが石を置きました");
-				boxNo[setPosition] = -1;
-			} else {
-				console.log("♪♪♪♪♪♪♪♪♪ライン" + j + "は揃ってません")
-			}
-		}
-		//for内部毎回（リーチにかかわらず）
-		console.log("ライン" + j + "の♪♪♪♪♪♪♪♪♪♪♪♪終了")
-	}
+// 	// ■■ cpu判断（1）自分リーチ時
+// 	console.log("CPU判別中11111111111111111111111111111111111111111111111111111")
+// 	for (let jr = 1; j <= 8; j++) {
+// 		if (ooo === -1) {
+// 			if (this["line" + j + "Total"] === -2) {//cpuリーチ
+// 				ooo = -2;
+// 				console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooooo④:" + ooo);
+// 				console.log("ライン" + j + "がリーチ♪♪♪♪♪")
+// 				//★完★リーチしているラインから残りの空きを取得
+// 				var a;//インデックス番号は文字列で取得されるので後で数値に変換
+// 				var indexNo;
+// 				for (a in this["line" + j]) {
+// 					indexNo = uint(a);
+// 					var b = this["line" + j][indexNo];
+// 					console.log("__________for_in_____:" + a, b);
+// 					//よってcpuが置く場所は
+// 					if (b == 0) {
+// 						var setPosition = this["line" + j + "Reach"][a];
+// 						console.log("▲setPos:" + setPosition);
+// 					}
+// 				}
+// 				//★完★空きに石をセット
+// 				cpuput02 = setPosition;
+// 				// インスタンス名から参照を取得して操作
+// 				target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 				console.log(target_mc03.name);
+// 				target_mc03.x = cp_gotoX[cpuput02];
+// 				target_mc03.y = cp_gotoY[cpuput02];
+// 				console.log(cpuput02 + "に●●CPUが石を置きました");
+// 				boxNo[setPosition] = -1;
+// 			} else {
+// 				console.log("♪♪♪♪♪♪♪♪♪ライン" + j + "は揃ってません")
+// 			}
+// 		}
+// 		//for内部毎回（リーチにかかわらず）
+// 		console.log("ライン" + j + "の♪♪♪♪♪♪♪♪♪♪♪♪終了")
+// 	}
 
-	//ooo=1;
-	console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo②:" + ooo);
+// 	//ooo=1;
+// 	console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo②:" + ooo);
 
-	console.log("for end")
+// 	console.log("for end")
 
-	console.log("＊＊＊＊＊CPU番置き処理終了・ 判別へ＊＊＊＊＊")
-	// ★ 手番フラグ変更後、勝敗・終了判別へ
-	yourMove = true;
-	statusNum = 2;
+// 	console.log("＊＊＊＊＊CPU番置き処理終了・ 判別へ＊＊＊＊＊")
+// 	// ★ 手番フラグ変更後、勝敗・終了判別へ
+// 	yourMove = true;
+// 	statusNum = 2;
 
-	// ■■ cpu判断（2）敵リーチ時
-	console.log("CPU判別中2222222222222222222222222222222222222222222222222222222222222222222222222");
-	for (var k = 1; k <= 8; k++) {
-		if (ooo === -1) {
-			if (this["line" + k + "Total"] == 2) { // cpuリーチ
-				ooo = -2;
-				console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooooo④:" + ooo);
-				console.log("ライン" + k + "が敵リーチ♪♪♪♪♪")
-				// ★完★リーチしているラインから残りの空きを取得
-				var aa; // インデックス番号は文字列で取得されるので後で数値に変換
-				var indexNo02;
-				for (aa in this["line" + k]) {
-					indexNo02 = uint(aa);//
-					var bb = this["line" + k][indexNo02];
-					console.log("__________for_in_____:" + aa, bb);
-					//よってcpuが置く場所は
-					if (bb == 0) {
-						var setPosition02 = this["line" + k + "Reach"][aa];
-						console.log("▲setPos:" + setPosition02);
-					}
-				}
-				// ★完★空きに石をセット
-				cpuput02 = setPosition02;
-				// インスタンス名から参照を取得して操作
-				target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-				console.log(target_mc03.name);
-				target_mc03.x = cp_gotoX[cpuput02];
-				target_mc03.y = cp_gotoY[cpuput02];
-				console.log(cpuput02 + "に●●CPUが石を置きました（リーチを阻止したニャニャニャニャニャニャニャ！）");
-				boxNo[setPosition02] = -1;
-			} else {
-				console.log("♪♪♪♪♪♪♪♪♪ライン" + k + "は揃ってません")
-			}
-		}
-		// for内部毎回（リーチにかかわらず）
-		console.log("ライン" + k + "の♪♪♪♪♪♪♪♪♪♪♪♪終了")
-	}
+// 	// ■■ cpu判断（2）敵リーチ時
+// 	console.log("CPU判別中2222222222222222222222222222222222222222222222222222222222222222222222222");
+// 	for (var k = 1; k <= 8; k++) {
+// 		if (ooo === -1) {
+// 			if (this["line" + k + "Total"] == 2) { // cpuリーチ
+// 				ooo = -2;
+// 				console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooooo④:" + ooo);
+// 				console.log("ライン" + k + "が敵リーチ♪♪♪♪♪")
+// 				// ★完★リーチしているラインから残りの空きを取得
+// 				var aa; // インデックス番号は文字列で取得されるので後で数値に変換
+// 				var indexNo02;
+// 				for (aa in this["line" + k]) {
+// 					indexNo02 = uint(aa);//
+// 					var bb = this["line" + k][indexNo02];
+// 					console.log("__________for_in_____:" + aa, bb);
+// 					//よってcpuが置く場所は
+// 					if (bb == 0) {
+// 						var setPosition02 = this["line" + k + "Reach"][aa];
+// 						console.log("▲setPos:" + setPosition02);
+// 					}
+// 				}
+// 				// ★完★空きに石をセット
+// 				cpuput02 = setPosition02;
+// 				// インスタンス名から参照を取得して操作
+// 				target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 				console.log(target_mc03.name);
+// 				target_mc03.x = cp_gotoX[cpuput02];
+// 				target_mc03.y = cp_gotoY[cpuput02];
+// 				console.log(cpuput02 + "に●●CPUが石を置きました（リーチを阻止したニャニャニャニャニャニャニャ！）");
+// 				boxNo[setPosition02] = -1;
+// 			} else {
+// 				console.log("♪♪♪♪♪♪♪♪♪ライン" + k + "は揃ってません")
+// 			}
+// 		}
+// 		// for内部毎回（リーチにかかわらず）
+// 		console.log("ライン" + k + "の♪♪♪♪♪♪♪♪♪♪♪♪終了")
+// 	}
 
-	console.log("＊＊＊＊＊CPU番置き処理終了・ 判別へ＊＊＊＊＊")
-	// ★手番フラグ変更後、勝敗・終了判別へ
-	yourMove = true;
-	statusNum = 2;
+// 	console.log("＊＊＊＊＊CPU番置き処理終了・ 判別へ＊＊＊＊＊")
+// 	// ★手番フラグ変更後、勝敗・終了判別へ
+// 	yourMove = true;
+// 	statusNum = 2;
 
-	// ooo=2;
-	console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo③:" + ooo);
+// 	// ooo=2;
+// 	console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo③:" + ooo);
 
 
-	// ■■（3）単に空きを降順で埋めていく（思考回路無し）
-	console.log("CPU判別中333333333333333333333333333333333333333333333333333333333333");
+// 	// ■■（3）単に空きを降順で埋めていく（思考回路無し）
+// 	console.log("CPU判別中333333333333333333333333333333333333333333333333333333333333");
 
-	// cpu判断（3）通常時
-	// ■ 優先順位1「4（中央）」
-	if (ooo === -1) {
-		console.log("降順")
-		if (boxNo[4] == 0) {
-			cpuput02 = 4;
-			// インスタンス名から参照を取得して操作
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[4] = -1;
-			// ★手番フラグ変更後、勝敗・終了判別へ
-			// yourMove=true;
-			// statusNum=2;
-		}
-		// ■ 優先順位2「0（左上）」
-		else if (boxNo[0] == 0) {
-			cpuput02 = 0;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[0] = -1;
-			// ★ 手番フラグ変更後、勝敗・終了判別へ
-			// yourMove=true;
-			// statusNum=2;
-		}
-		// ■ 優先順位3「8（右下）」
-		else if (boxNo[8] == 0) {
-			cpuput02 = 8;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[8] = -1;
-			// ★ 手番フラグ変更後、勝敗・終了判別へ
-			// yourMove=true;
-			// statusNum=2;
-		}
-		// ■ 優先順位4「2（右上）」
-		else if (boxNo[2] == 0) {
-			cpuput02 = 2;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[2] = -1;
-			// ★ 手番フラグ変更後、勝敗・終了判別へ
-			// yourMove=true;
-			// statusNum=2;
-		}
-		// ■ 優先順位5「6（左下）」
-		else if (boxNo[6] == 0) {
-			cpuput02 = 6;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[6] = -1;
-			// ★ 手番フラグ変更後、勝敗・終了判別へ
-			// yourMove=true;
-			// statusNum=2;
-		}
-		// ■ 優先順位6「1（中上）」
-		else if (boxNo[1] == 0) {
-			cpuput02 = 1;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[1] = -1;
-			// ★ 手番フラグ変更後、勝敗・終了判別へ
-			// yourMove=true;
-			// statusNum=2;
-		}
-		// ■ 優先順位7「3（中左）」
-		else if (boxNo[3] == 0) {
-			cpuput02 = 3;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[3] = -1;
-			//★手番フラグ変更後、勝敗・終了判別へ
-			//yourMove=true;
-			//statusNum=2;
-		}
-		// ■ 優先順位8「5（中右）」
-		else if (boxNo[5] == 0) {
-			cpuput02 = 5;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[5] = -1;
-		}
-		// ■ 優先順位9「7（中右）」
-		else if (boxNo[7] == 0) {
-			cpuput02 = 7;
-			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
-			console.log(target_mc03.name);
-			target_mc03.x = cp_gotoX[cpuput02];
-			target_mc03.y = cp_gotoY[cpuput02];
-			console.log(cpuput02 + "に●●CPUが石を置きました");
-			boxNo[7] = -1;
-			//★手番フラグ変更後、勝敗・終了判別へ
-			//yourMove=true;
-			//statusNum=2;
-		}
-		else {
-			//置く場所無し
-		}
+// 	// cpu判断（3）通常時
+// 	// ■ 優先順位1「4（中央）」
+// 	if (ooo === -1) {
+// 		console.log("降順")
+// 		if (boxNo[4] == 0) {
+// 			cpuput02 = 4;
+// 			// インスタンス名から参照を取得して操作
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[4] = -1;
+// 			// ★手番フラグ変更後、勝敗・終了判別へ
+// 			// yourMove=true;
+// 			// statusNum=2;
+// 		}
+// 		// ■ 優先順位2「0（左上）」
+// 		else if (boxNo[0] == 0) {
+// 			cpuput02 = 0;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[0] = -1;
+// 			// ★ 手番フラグ変更後、勝敗・終了判別へ
+// 			// yourMove=true;
+// 			// statusNum=2;
+// 		}
+// 		// ■ 優先順位3「8（右下）」
+// 		else if (boxNo[8] == 0) {
+// 			cpuput02 = 8;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[8] = -1;
+// 			// ★ 手番フラグ変更後、勝敗・終了判別へ
+// 			// yourMove=true;
+// 			// statusNum=2;
+// 		}
+// 		// ■ 優先順位4「2（右上）」
+// 		else if (boxNo[2] == 0) {
+// 			cpuput02 = 2;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[2] = -1;
+// 			// ★ 手番フラグ変更後、勝敗・終了判別へ
+// 			// yourMove=true;
+// 			// statusNum=2;
+// 		}
+// 		// ■ 優先順位5「6（左下）」
+// 		else if (boxNo[6] == 0) {
+// 			cpuput02 = 6;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[6] = -1;
+// 			// ★ 手番フラグ変更後、勝敗・終了判別へ
+// 			// yourMove=true;
+// 			// statusNum=2;
+// 		}
+// 		// ■ 優先順位6「1（中上）」
+// 		else if (boxNo[1] == 0) {
+// 			cpuput02 = 1;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[1] = -1;
+// 			// ★ 手番フラグ変更後、勝敗・終了判別へ
+// 			// yourMove=true;
+// 			// statusNum=2;
+// 		}
+// 		// ■ 優先順位7「3（中左）」
+// 		else if (boxNo[3] == 0) {
+// 			cpuput02 = 3;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[3] = -1;
+// 			//★手番フラグ変更後、勝敗・終了判別へ
+// 			//yourMove=true;
+// 			//statusNum=2;
+// 		}
+// 		// ■ 優先順位8「5（中右）」
+// 		else if (boxNo[5] == 0) {
+// 			cpuput02 = 5;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[5] = -1;
+// 		}
+// 		// ■ 優先順位9「7（中右）」
+// 		else if (boxNo[7] == 0) {
+// 			cpuput02 = 7;
+// 			target_mc03 = MovieClip(getChildByName("cp" + cpuput02));
+// 			console.log(target_mc03.name);
+// 			target_mc03.x = cp_gotoX[cpuput02];
+// 			target_mc03.y = cp_gotoY[cpuput02];
+// 			console.log(cpuput02 + "に●●CPUが石を置きました");
+// 			boxNo[7] = -1;
+// 			//★手番フラグ変更後、勝敗・終了判別へ
+// 			//yourMove=true;
+// 			//statusNum=2;
+// 		}
+// 		else {
+// 			//置く場所無し
+// 		}
 
-		//		trace("＊＊＊＊＊降順CPU番置き処理終了・ 判別へ＊＊＊＊＊")
-		//★手番フラグ変更後、勝敗・終了判別へ
-		//yourMove=true;
-		//statusNum=2;
-		//return;
-	}
-}
+// 		//		trace("＊＊＊＊＊降順CPU番置き処理終了・ 判別へ＊＊＊＊＊")
+// 		//★手番フラグ変更後、勝敗・終了判別へ
+// 		//yourMove=true;
+// 		//statusNum=2;
+// 		//return;
+// 	}
+// }
 
 
 
