@@ -68,29 +68,44 @@ text2.anchor.set(0.5);
 text2.x = WIDTH / 2 + text1.width - 50;
 text2.y = HEIGHT / 2 - 10;
 
-let image1;
 let image2;
 let image3;
 let image4;
 let image5;
+// let image_bl_1;
+// let image_bl_2;
+// let image_bl_3;
+// let image_bl_4;
+// let image_bl_5;
+// let image_bl_6;
+// let image_bl_7;
+// let image_bl_8;
+// let image_bl_9;
+// let image_wh_1;
+// let image_wh_2;
+// let image_wh_3;
+// let image_wh_4;
+// let image_wh_5;
+// let image_wh_6;
+// let image_wh_7;
+// let image_wh_8;
+// let image_wh_9;
 let loadingEnd = false;
+
+let img_bl = []; // 黒石
+let img_wh = []; // 白石
+
+let temp1;
 
 // Load image and Set sprite
 const LoadImg = async () => {
 	console.log("LoadImg()");
 
-	// 猫
-	const texture1 = await Assets.load('assets/images/pic_cat2.png');
-	image1 = Sprite.from(texture1);
-	console.log(texture1); // Texture {_events: Events, _eventsCount: 0, noFrame: true, baseTexture: _BaseTexture, _frame: Rectangle, …}
-	console.log(image1); // Sprite {_events: Events, _eventsCount: 0, tempDisplayObjectParent: null, transform: _Transform, alpha: 1, …}
-	image1.anchor.set(0.5);
-	image1.x = WIDTH / 2;
-	image1.y = HEIGHT / 2 + 90;
-	// image1.width = image1.width / 2;
-	// image1.height = image1.height / 2;
-	image1.scale.set(0.5, 0.5);
-	container.addChild(image1);
+	console.log(app);
+	console.log(app.stage);
+	console.log(this); // undefined
+	console.log(container);
+
 
 	// 背景の木
 	const texture2 = await Assets.load('assets/images/pic_wood.png');
@@ -102,6 +117,10 @@ const LoadImg = async () => {
 	image2.y = 1;
 	// image1.scale.set(0.5, 0.5);
 	container.addChild(image2);
+
+	console.log("image2"); // undefined
+	console.log(image2); // Sprite {_events: Events, _eventsCount: 0, tempDisplayObjectParent: null, transform: _Transform, alpha: 1,
+	console.log(image2.parent); // _Container2 {_events: Events, _eventsCount: 0, 
 
 	// 升目
 	const texture3 = await Assets.load('assets/images/pic_board.png');
@@ -136,11 +155,36 @@ const LoadImg = async () => {
 	// image1.scale.set(0.5, 0.5);
 	container.addChild(image5);
 
+	// 黒い駒9個
+	for(let i = 0; i <= 8; i++){
+		// temp1 = `image_bl_${i}`;
+		// temp1 = Sprite.from(texture5);
+		// temp1.anchor.set(0.5);
+		// temp1.x = i * 30;
+		// temp1.y = i * 30 + 80;
+		// container.addChild(temp1);
+		img_bl[i] = Sprite.from(texture5);
+		img_bl[i] .anchor.set(0.5);
+		img_bl[i] .x = i * 30;
+		img_bl[i] .y = i * 30 + 80;
+		container.addChild(img_bl[i]);
+	}
+
+	// 白い駒9個
+	for(let i = 0; i <= 8; i++){
+		img_wh[i] = Sprite.from(texture4);
+		img_wh[i] .anchor.set(0.5);
+		img_wh[i] .x = i * 40;
+		img_wh[i] .y = i * 40 + 100;
+		container.addChild(img_wh[i]);
+	}
+
+	console.log(this);
 
 	next();
 }
 
-LoadImg();
+LoadImg(this);
 
 // RandomInt test
 let dice = randomInt(1, 6);
@@ -228,6 +272,8 @@ let placeStoneAll; //: Boolean;s
 
 let initEnd = false;
 
+let t = app.stage;
+
 
 const init = () => {
 	console.log("init()");
@@ -290,7 +336,16 @@ const startMain = () => {
 	if (statusNum === 0) {
 		// ■■ 石を盤上からどかす（スタート時に端に）
 		statusNum = -1;
-		// removeStone();
+		console.log("statusNum === 0");
+		// console.log(temp1); // Sprite
+		// console.log(image_bl_1); // undefined
+		// temp1.x = 100;
+		// temp1.y = 300;
+		// img_bl[0].x = 100; // ok
+		// img_bl[1].y = 300; //ok 
+		//image_bl_1.x = 100;
+		//image_bl_1.y = 300;
+		removeStone();
 		statusNum = 1;
 	}
 
@@ -344,18 +399,30 @@ const startMain = () => {
 
 // ■■ 石を画面からどかす（スタート時に端に）
 // function removeStone() {
-// const removeStone = () => {
-// 	for (let i = 0; i <= 8; i++) {
-// 		target_mc = MovieClip(getChildByName("pl" + i)); // playerの石、※MC名で参照 → Sprite名？で参照に
-// 		// console.log("target_mc.name:" + target_mc.name); // target_mc.name:pl0～target_mc.name:pl8
-// 		target_mc.x = -50;
-// 		target_mc.y = -50; // ↓ここは配置時にも使うので外でも可？
-// 		target_mc02 = MovieClip(getChildByName("cp" + i)); // cpu石
-// 		// console.log(target_mc02.name);
-// 		target_mc02.x = -50;
-// 		target_mc02.y = -0;
-// 	}
-// }
+const removeStone = () => {
+	for (let i = 0; i <= 8; i++) {
+		// // target_mc = MovieClip(getChildByName("pl" + i)); // playerの石、※MC名で参照 → Sprite名？で参照に
+		// let target_bl = _Container2[`image_bl_${i}`];
+				// target_mc = MovieClip(getChildByName("pl" + i)); // playerの石、※MC名で参照 → Sprite名？で参照に
+		// let target_bl = image_bl_1;
+		// console.log("target_mc.name:" + target_mc.name); // target_mc.name:pl0～target_mc.name:pl8
+		
+		// 黒石を画面外に
+		img_bl[i].x = -500;
+		img_bl[i].y = -500;
+
+		// 白石を画面外に
+		img_wh[i].x = -500;
+		img_wh[i].y = -500;
+
+
+		// target_mc02 = MovieClip(getChildByName("cp" + i)); // cpu石
+		// let target_wh = `image_wh_${i}`
+		// console.log(target_mc02.name);
+		//target_wh.x = -50;
+		//target_wh.y = 400;
+	}
+}
 
 // ■■ 先攻後攻決める（RNDで）※returnを値で返して代入にする？
 // function beforeOrAfter() {
