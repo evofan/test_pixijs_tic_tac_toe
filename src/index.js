@@ -72,6 +72,7 @@ let image2;
 let image3;
 let image4;
 let image5;
+let image6;
 // let image_bl_1;
 // let image_bl_2;
 // let image_bl_3;
@@ -155,6 +156,21 @@ const LoadImg = async () => {
 	// image1.scale.set(0.5, 0.5);
 	container.addChild(image5);
 
+	// 10x10白
+	const texture6 = await Assets.load('assets/images/pic_10x10_white.png');
+	image6 = Sprite.from(texture6);
+	image6.anchor.set(0.5);
+	image6.x = 165;
+	image6.y = 335;
+	image6.scale.set(10.0, 10.0);
+	image6.alpha = 0.3;
+	container.addChild(image6);
+	image6.eventMode = "static";
+	image6.name = "image6";
+	image6.cursor = "pointer";
+	image6.on("pointerdown", onclickTemp,this);
+
+
 	// 黒い駒9個
 	for(let i = 0; i <= 8; i++){
 		// temp1 = `image_bl_${i}`;
@@ -199,13 +215,19 @@ const next = () => {
 
 }
 
+const onclickTemp = (context) => {
+	console.log("onclickTemp() clicked!", context);
+	console.log(context.currentTarget); // Sprite
+	console.log(context.currentTarget.name); // image6 ok 連番で付けて最後の数字から判別？
+}
+
 // 日付表示
 // let today = displayDateText(app);
 
 // Ticler
 app.ticker.add(() => {
 
-	console.log("tick...");
+	// console.log("tick...");
 	// if (loadingEnd) {
 	//     image1.x = image1.x + 1;
 	//     if (image1.x >= WIDTH + image1.width / 2) {
@@ -407,6 +429,8 @@ const startMain = () => {
 		statusNum = -1;
 		console.log("★！★通常ここには来ない！");
 	}
+
+	testStop = false; // 一時停止用
 
 }
 
