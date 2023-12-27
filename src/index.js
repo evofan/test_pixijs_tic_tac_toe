@@ -164,18 +164,18 @@ const LoadImg = async () => {
 		// temp1.y = i * 30 + 80;
 		// container.addChild(temp1);
 		img_bl[i] = Sprite.from(texture5);
-		img_bl[i] .anchor.set(0.5);
-		img_bl[i] .x = i * 30;
-		img_bl[i] .y = i * 30 + 80;
+		img_bl[i].anchor.set(0.5);
+		img_bl[i].x = i * 30;
+		img_bl[i].y = i * 30 + 80;
 		container.addChild(img_bl[i]);
 	}
 
 	// 白い駒9個
 	for(let i = 0; i <= 8; i++){
 		img_wh[i] = Sprite.from(texture4);
-		img_wh[i] .anchor.set(0.5);
-		img_wh[i] .x = i * 40;
-		img_wh[i] .y = i * 40 + 100;
+		img_wh[i].anchor.set(0.5);
+		img_wh[i].x = i * 40;
+		img_wh[i].y = i * 40 + 100;
 		container.addChild(img_wh[i]);
 	}
 
@@ -323,9 +323,10 @@ const init = () => {
 
 // }
 
+let testStop = true;
 const startMain = () => {
 
-	if (initEnd) {
+	if (initEnd && testStop) {
 		console.log("ステート監視開始");
 	} else {
 		return false;
@@ -335,6 +336,7 @@ const startMain = () => {
 
 	if (statusNum === 0) {
 		// ■■ 石を盤上からどかす（スタート時に端に）
+		console.log("■State:0 石を盤上からどかす");
 		statusNum = -1;
 		console.log("statusNum === 0");
 		// console.log(temp1); // Sprite
@@ -350,26 +352,41 @@ const startMain = () => {
 	}
 
 	if (statusNum === 1) {
+		console.log("■State:1 先攻後攻決める");
+		console.log("statusNum === 1");
 		// ■■ 先攻後攻決める（この場合RNDで）
 		statusNum = -1;
-		// beforeOrAfter(); // console.log("yourMove:"+yourMove); // true:人間が先攻、false：CPUが先攻
+		beforeOrAfter(); // console.log("yourMove:"+yourMove); // true:人間が先攻、false：CPUが先攻
 		statusNum = 2;
 	}
 
 	if (statusNum === 2) {
+		console.log("■State:2 ラインが揃ったかの判別");
+		console.log("statusNum === 2");
 		statusNum = -1;
 		// ■■ラインが揃ったかの判別（各ラインTotalで、+3＝Player勝ち、-3＝CPU勝ち）
 		// clearLineCheck();
-		// if (clearLineFlag == 1) { gotoAndPlay(3) }//player勝利
-		// else if (clearLineFlag == -1) { gotoAndPlay(4) }//cpu勝利
-		// else { statusNum = 3 }
+		if (clearLineFlag === 1) { 
+			// gotoAndPlay(3)
+			console.log("player勝利表示処理");
+		}//player勝利
+		else if (clearLineFlag === -1) {
+			 //gotoAndPlay(4);
+			 console.log("CPU勝利表示処理");
+			}//cpu勝利
+		else { statusNum = 3 }
+
+		//temp
+		// testStop = false;
 	}
 
 	if (statusNum === 3) {
 		statusNum = -1;
+		console.log("■State:3 石を9個置き終わったか判別");
+		console.log("statusNum === 3");
 		// ■■ 石を9個置き終わったか判別
-		// console.log("placeStoneAll:"+placeStoneAll); // false
-		// placeStoneAllCheck();
+		console.log("placeStoneAll:"+placeStoneAll); // false
+		placeStoneAllCheck();
 		// console.log("placeStoneAll:"+placeStoneAll); // false or true
 		// if (placeStoneAll == true && clearLineFlag == 0) { gotoAndPlay(2) } // trueで終了（引き分け）処理
 		// else { statusNum = 4; }
@@ -426,110 +443,112 @@ const removeStone = () => {
 
 // ■■ 先攻後攻決める（RNDで）※returnを値で返して代入にする？
 // function beforeOrAfter() {
-// const beforeOrAfter = () => {
-// 	beforeAfter = Math.floor(Math.random() * 2 + 1);
-// 	if (beforeAfter == 1) {
-// 		yourMove = true; // 人間先攻
-// 	} else {
-// 		yourMove = false; // CPU先攻
-// 	}
-// }
+const beforeOrAfter = () => {
+	beforeAfter = Math.floor(Math.random() * 2 + 1);
+	if (beforeAfter == 1) {
+		yourMove = true; // 人間先攻
+		console.log("人間先攻");
+	} else {
+		yourMove = false; // CPU先攻
+		console.log("CPU先攻");
+	}
+}
 
 // ■■ ラインが揃ったかの判別（各ラインTotalの値で、+3＝Player勝ち、-3＝CPU勝ち）
 // function clearLineCheck(): void {
-// const clearLineCheck = () => {
-// 	console.log("▲▲▲clearLineCheck▲▲▲"); // ▲▲▲clearLineCheck▲▲▲
-// 	console.log("▲this:" + this); // ▲this:[object MainTimeline] -> 
-// 	console.log("▲：" + line1[0]);
-// 	console.log("▲▲：" + MainTimeline); // ▲▲：[class MainTimeline] -> 
-// 	// ラインが9個揃ったか判別用（合計3～-3）
-// 	line1 = [boxNo[0], boxNo[1], boxNo[2]]; // line1(0,1,2)上―
-// 	line2 = [boxNo[3], boxNo[4], boxNo[5]]; // line2(3,4,5)中―
-// 	line3 = [boxNo[6], boxNo[7], boxNo[8]]; // line3(6,7,8)下―
-// 	line4 = [boxNo[0], boxNo[3], boxNo[6]]; // line4(0,3,6) //左｜
-// 	line5 = [boxNo[1], boxNo[4], boxNo[7]]; // line5(1,4,7) //中｜
-// 	line6 = [boxNo[2], boxNo[5], boxNo[8]]; // line6(2,5,8) //右｜
-// 	line7 = [boxNo[0], boxNo[4], boxNo[8]]; // line7(0,4,8) //＼
-// 	line8 = [boxNo[6], boxNo[4], boxNo[2]]; // line8(6,4,2) //／
-// 	//↑★mustここでもう1回代入しないと反映されない（AS時）
+const clearLineCheck = () => {
+	console.log("▲▲▲clearLineCheck()▲▲▲"); // ▲▲▲clearLineCheck▲▲▲
+	console.log("▲this:" + this); // ▲this:[object MainTimeline] -> 
+	console.log("▲：" + line1[0]);
+	console.log("▲▲：" + MainTimeline); // ▲▲：[class MainTimeline] -> 
+	// ラインが9個揃ったか判別用（合計3～-3）
+	line1 = [boxNo[0], boxNo[1], boxNo[2]]; // line1(0,1,2)上―
+	line2 = [boxNo[3], boxNo[4], boxNo[5]]; // line2(3,4,5)中―
+	line3 = [boxNo[6], boxNo[7], boxNo[8]]; // line3(6,7,8)下―
+	line4 = [boxNo[0], boxNo[3], boxNo[6]]; // line4(0,3,6) //左｜
+	line5 = [boxNo[1], boxNo[4], boxNo[7]]; // line5(1,4,7) //中｜
+	line6 = [boxNo[2], boxNo[5], boxNo[8]]; // line6(2,5,8) //右｜
+	line7 = [boxNo[0], boxNo[4], boxNo[8]]; // line7(0,4,8) //＼
+	line8 = [boxNo[6], boxNo[4], boxNo[2]]; // line8(6,4,2) //／
+	//↑★mustここでもう1回代入しないと反映されない（AS時）
 
-// 	//（1）各ラインの合計算出、※関数にしてfor文で？
+	//（1）各ラインの合計算出、※関数にしてfor文で？
 
-// 	// line1(0,1,2) 上―
-// 	line1Total = line1[0] + line1[1] + line1[2];
-// 	console.log("1ライン目：" + line1[0], line1[1], line1[2] + "→合計：" + line1Total); // 1ライン目：1 1 1 → 合計：3
-// 	//trace(typeof line1Total);//number、//trace(typeof Array);//object
+	// line1(0,1,2) 上―
+	line1Total = line1[0] + line1[1] + line1[2];
+	console.log("1ライン目：" + line1[0], line1[1], line1[2] + "→合計：" + line1Total); // 1ライン目：1 1 1 → 合計：3
+	//trace(typeof line1Total);//number、//trace(typeof Array);//object
 
-// 	// line2(3,4,5) 中―
-// 	line2Total = line2[0] + line2[1] + line2[2];
-// 	console.log("2ライン目：" + line2[0], line2[1], line2[2] + "→合計：" + line2Total); // 2ライン目：0 0 0 → 合計：0
+	// line2(3,4,5) 中―
+	line2Total = line2[0] + line2[1] + line2[2];
+	console.log("2ライン目：" + line2[0], line2[1], line2[2] + "→合計：" + line2Total); // 2ライン目：0 0 0 → 合計：0
 
-// 	// line3(6,7,8) 下―
-// 	line3Total = line3[0] + line3[1] + line3[2];
-// 	console.log("3ライン目：" + line3[0], line3[1], line3[2] + "→合計：" + line3Total); // 3ライン目：0 0 0 → 合計：0
+	// line3(6,7,8) 下―
+	line3Total = line3[0] + line3[1] + line3[2];
+	console.log("3ライン目：" + line3[0], line3[1], line3[2] + "→合計：" + line3Total); // 3ライン目：0 0 0 → 合計：0
 
-// 	// line4(0,3,6) // 左｜
-// 	line4Total = line4[0] + line4[1] + line4[2];
-// 	console.log("4ライン目：" + line4[0], line4[1], line4[2] + "→合計：" + line4Total); // 4ライン目：0 0 0 → 合計：0
+	// line4(0,3,6) // 左｜
+	line4Total = line4[0] + line4[1] + line4[2];
+	console.log("4ライン目：" + line4[0], line4[1], line4[2] + "→合計：" + line4Total); // 4ライン目：0 0 0 → 合計：0
 
-// 	// line5(1,4,7) // 中｜
-// 	line5Total = line5[0] + line5[1] + line5[2];
-// 	console.log("5ライン目：" + line5[0], line5[1], line5[2] + "→合計：" + line5Total); // 5ライン目：0 0 0 → 合計：0
+	// line5(1,4,7) // 中｜
+	line5Total = line5[0] + line5[1] + line5[2];
+	console.log("5ライン目：" + line5[0], line5[1], line5[2] + "→合計：" + line5Total); // 5ライン目：0 0 0 → 合計：0
 
-// 	// line6(2,5,8) // 右｜
-// 	line6Total = line6[0] + line6[1] + line6[2];
-// 	console.log("6ライン目：" + line6[0], line6[1], line6[2] + "→合計：" + line6Total); // 6ライン目：0 0 0 → 合計：0
+	// line6(2,5,8) // 右｜
+	line6Total = line6[0] + line6[1] + line6[2];
+	console.log("6ライン目：" + line6[0], line6[1], line6[2] + "→合計：" + line6Total); // 6ライン目：0 0 0 → 合計：0
 
-// 	// line7(0,4,8) // ＼
-// 	line7Total = line7[0] + line7[1] + line7[2];
-// 	console.log("7ライン目：" + line7[0], line7[1], line7[2] + "→合計：" + line7Total); // 7ライン目：0 0 0 → 合計：0
+	// line7(0,4,8) // ＼
+	line7Total = line7[0] + line7[1] + line7[2];
+	console.log("7ライン目：" + line7[0], line7[1], line7[2] + "→合計：" + line7Total); // 7ライン目：0 0 0 → 合計：0
 
-// 	// line8(6,4,2) // ／
-// 	line8Total = line8[0] + line8[1] + line8[2];
-// 	console.log("8ライン目：" + line8[0], line8[1], line8[2] + "→合計：" + line8Total); // 8ライン目：0 0 0 → 合計：0
+	// line8(6,4,2) // ／
+	line8Total = line8[0] + line8[1] + line8[2];
+	console.log("8ライン目：" + line8[0], line8[1], line8[2] + "→合計：" + line8Total); // 8ライン目：0 0 0 → 合計：0
 
-// 	//（2）各ラインの判別
-// 	for (let j = 1; j <= 8; j++) { // trace("j:"+j);
-// 		if (this["line" + j + "Total"] == 3) { // trace("this:"+this);//this:[object MainTimeline]
-// 			clearLineFlag = 1;
-// 			console.log("●人間の勝ち");
-// 			break;
-// 		} else if (this["line" + j + "Total"] == -3) {
-// 			clearLineFlag = -1;
-// 			console.log("●CPUの勝ち");
-// 			break;
-// 		} else {
-// 			console.log(j, "ラインが揃ってないので次のラインへ");
-// 			if (j != 8) {
-// 				continue; // 全部判別し終わってない場合は抜けないでループ
-// 			}
-// 			console.log("判別終了、●今回揃ってるラインは無し");
-// 			clearLineFlag = 0;
-// 		}
-// 	}
-// }
+	//（2）各ラインの判別
+	for (let j = 1; j <= 8; j++) { // trace("j:"+j);
+		if (this["line" + j + "Total"] == 3) { // trace("this:"+this);//this:[object MainTimeline]
+			clearLineFlag = 1;
+			console.log("●人間の勝ち");
+			break;
+		} else if (this["line" + j + "Total"] == -3) {
+			clearLineFlag = -1;
+			console.log("●CPUの勝ち");
+			break;
+		} else {
+			console.log(j, "ラインが揃ってないので次のラインへ");
+			if (j != 8) {
+				continue; // 全部判別し終わってない場合は抜けないでループ
+			}
+			console.log("判別終了、●今回揃ってるラインは無し");
+			clearLineFlag = 0;
+		}
+	}
+}
 
 // ■■ 石を9個置き終わったか判別
 // function placeStoneAllCheck(): void/*:Boolean*/ {
-// const placeStoneAllCheck = () => {
-// 	console.log("▲▲▲placeStoneAllCheck▲▲▲");
-// 	//trace("boxNo.length:"+boxNo.length);//boxNo.length:9
-// 	for (var i = 0; i <= boxNo.length - 1; i++) {
-// 		if (boxNo[i] == 0) {
-// 			console.log("埋まって無い所があるので★ゲーム継続★ " + "（埋まってないマス目" + i + "＝" + boxNo[i] + "）");
-// 			// 埋まって無い所があるので★ゲーム継続★ （埋まってないマス目0＝0）
-// 			placeStoneAll = false;
-// 			break;
-// 		}
-// 		console.log(i, "マス目＝" + boxNo[i]);//0 マス目＝1
-// 		if (i == 8) {
-// 			console.log("●全部埋まりました、引き分けです ⇒ 終了");
-// 			placeStoneAll = true;
-// 			break;
-// 		}
-// 	}
-// 	// return placeStoneAll;
-// }
+const placeStoneAllCheck = () => {
+	console.log("▲▲▲placeStoneAllCheck()▲▲▲");
+	//trace("boxNo.length:"+boxNo.length);//boxNo.length:9
+	for (let i = 0; i <= boxNo.length - 1; i++) {
+		if (boxNo[i] === 0) {
+			console.log("埋まって無い所があるので★ゲーム継続★ " + "（埋まってないマス目" + i + "＝" + boxNo[i] + "）");
+			// 埋まって無い所があるので★ゲーム継続★ （埋まってないマス目0＝0）
+			placeStoneAll = false;
+			break;
+		}
+		console.log(i, "マス目＝" + boxNo[i]);//0 マス目＝1
+		if (i === 8) {
+			console.log("●全部埋まりました、引き分けです ⇒ 終了");
+			placeStoneAll = true;
+			break;
+		}
+	}
+	// return placeStoneAll;
+}
 
 // ■■ プレイヤーの手番
 // function playerTurn() {
