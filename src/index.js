@@ -93,6 +93,7 @@ let image6;
 // let image_wh_9;
 let loadingEnd = false;
 
+let img_hit = []; // ヒットエリア
 let img_bl = []; // 黒石
 let img_wh = []; // 白石
 
@@ -161,7 +162,7 @@ const LoadImg = async () => {
 	image6 = Sprite.from(texture6);
 	image6.anchor.set(0.5);
 	image6.x = 165;
-	image6.y = 335;
+	image6.y = 35;
 	image6.scale.set(10.0, 10.0);
 	image6.alpha = 0.3;
 	container.addChild(image6);
@@ -169,6 +170,22 @@ const LoadImg = async () => {
 	image6.name = "image6";
 	image6.cursor = "pointer";
 	image6.on("pointerdown", onclickTemp,this);
+
+		// 10x10白 9個
+	for(let i = 0; i <= 8; i++){
+		img_hit[i] = Sprite.from(texture6);
+		img_hit[i].anchor.set(0.5);
+		img_hit[i].x = i%3 * 130;
+		img_hit[i].y = i * 30 + 180;
+		img_hit[i].scale.set(10.0, 10.0);
+		img_hit[i].alpha = 0.3;
+		container.addChild(img_hit[i]);
+		img_hit[i].eventMode = "static";
+		img_hit[i].name = `img_hit${[i]}`;
+		img_hit[i].cursor = "pointer";
+		img_hit[i].on("pointerdown", onclickTemp,this);
+	
+	}
 
 
 	// 黒い駒9個
